@@ -1,4 +1,4 @@
-# MyMvcApp – ASP.NET Core MVC Application
+MyMvcApp – ASP.NET Core MVC Application (School Management System)
 
 📌 Project Overview
 "MyMvcApp" is an ASP.NET Core MVC web application built using "Entity Framework Core (Code First approach)".  
@@ -10,7 +10,7 @@ The project demonstrates CRUD operations, user authentication, role-based author
 - Entity Framework Core (Code First)
 - ASP.NET Core Identity
 - SQL Server / LocalDB
-- Visual Studio Code
+- Visual Studio Code / Visual Studio
 - C#
 
 
