@@ -1,0 +1,45 @@
+﻿@model MyMvcApp.Models.Student
+@{
+    ViewData["Title"] = "Profile";
+}
+<h2>@Model.Name</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        @if (!string.IsNullOrEmpty(Model.PhotoPath))
+        {
+            <img src="@Model.PhotoPath" class="img-fluid" />
+        }
+        else
+        {
+            <img src="~/images/default-user.png" class="img-fluid" />
+        }
+        <p>Status: @(Model.IsActive ? "Active" : "Inactive")</p>
+        <p>Class: @Model.Classroom?.Name</p>
+        <p>Section: @Model.Section?.Name</p>
+    </div>
+    <div class="col-md-8">
+        <h4>Contact</h4>
+        <p>Email: @Model.Email</p>
+
+        <h4>Parent Info</h4>
+        <p>Father: @Model.ParentInfo?.FatherName - @Model.ParentInfo?.FatherPhone</p>
+
+        <h4>Enrollment History</h4>
+        <table class="table">
+            <thead><tr><th>Class</th><th>Section</th><th>From</th><th>To</th><th>Note</th></tr></thead>
+            <tbody>
+                @foreach (var e in Model.EnrollmentHistories.OrderByDescending(x => x.EnrolledAt))
+                {
+                    <tr>
+                        <td>@e.Classroom?.Name</td>
+                        <td>@e.Section?.Name</td>
+                        <td>@e.EnrolledAt.ToLocalTime()</td>
+                        <td>@(e.LeftAt?.ToLocalTime().ToString() ?? "-")</td>
+                        <td>@e.Note</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

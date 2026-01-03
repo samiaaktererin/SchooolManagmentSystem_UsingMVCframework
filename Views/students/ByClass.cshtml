@@ -1,0 +1,188 @@
+﻿@model IEnumerable<MyMvcApp.Models.Student>
+
+@{
+    ViewData["Title"] = "Students by Class";
+
+    int classId = ViewData["ClassId"] as int? ?? 0;
+    var currentSort = ViewData["CurrentSort"] as string;
+    var rollSortParam = ViewData["RollSortParam"] as string ?? "roll_asc";
+
+    var sections = ViewBag.SectionsForClass as List<MyMvcApp.Models.Section> ?? new List<MyMvcApp.Models.Section>();
+    var classroom = ViewBag.Classroom as MyMvcApp.Models.Classroom;
+
+    int? selectedSectionId = ViewData["SectionId"] as int?;
+    string filterRoll = ViewData["FilterRoll"] as string ?? string.Empty;
+    string filterName = ViewData["FilterName"] as string ?? string.Empty;
+
+    var classes = ViewBag.Classes as List<MyMvcApp.Models.Classroom> ?? new List<MyMvcApp.Models.Classroom>();
+    var sectionCounts = ViewBag.SectionCounts as Dictionary<int, int> ?? new Dictionary<int, int>();
+}
+
+<h2 class="mb-3">
+    @if (classroom != null)
+    {
+        @($"{classroom.Name} - Students")
+    }
+    else
+    {
+        @($"Class {classId} - Students")
+    }
+</h2>
+
+<div class="mb-3 d-flex gap-2 flex-wrap align-items-start align-items-md-center">
+    <a asp-action="Index" class="btn btn-secondary">All Students</a>
+
+    @* single filter form (no nested form) *@
+    <form method="get" asp-action="ByClass" class="d-flex gap-2 flex-wrap align-items-center ms-2">
+        <input type="hidden" name="id" value="@classId" />
+
+        <select name="sectionId" class="form-control" style="min-width:120px;max-width:160px">
+            <option value="">All Sections</option>
+            @foreach (var s in sections)
+            {
+                if (selectedSectionId.HasValue && selectedSectionId.Value == s.Id)
+                {
+                    <option value="@s.Id" selected="selected">@s.Name</option>
+                }
+                else
+                {
+                    <option value="@s.Id">@s.Name</option>
+                }
+            }
+        </select>
+
+        <input type="text" name="roll" placeholder="Roll" value="@filterRoll" class="form-control" style="min-width:120px;max-width:140px" />
+        <input type="text" name="name" placeholder="Name" value="@filterName" class="form-control" style="min-width:160px;max-width:220px" />
+
+        <button class="btn btn-primary">Filter</button>
+    </form>
+
+    <a asp-action="ByClass"
+       asp-route-id="@classId"
+       asp-route-sort="@rollSortParam"
+       class="btn btn-outline-primary ms-auto">
+        Sort by Roll
+        @if (currentSort == "roll_asc")
+        {
+            <span> ▲</span>
+        }
+        else if (currentSort == "roll_desc")
+        {
+            <span> ▼</span>
+        }
+    </a>
+
+    <button class="btn btn-outline-secondary d-md-none" type="button" data-bs-toggle="collapse" data-bs-target="#studentsSidebar" aria-expanded="false" aria-controls="studentsSidebar">
+        Classes ▾
+    </button>
+</div>
+
+<div class="students-wrapper">
+    <!-- SIDEBAR -->
+    <aside id="studentsSidebar" class="students-sidebar collapse d-md-block">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h6 class="card-title">Classes</h6>
+                <ul class="list-group list-group-flush">
+                    @foreach (var c in classes)
+                    {
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a class="fw-semibold" asp-controller="Students" asp-action="ByClass" asp-route-id="@c.Id">@c.Name</a>
+                                <a class="btn btn-sm btn-outline-secondary" asp-controller="Students" asp-action="ByClass" asp-route-id="@c.Id">View</a>
+                            </div>
+
+                            <div class="mt-2 d-flex flex-wrap">
+                                @{
+                                    var secs = (c.Sections != null && c.Sections.Any()) ? c.Sections.OrderBy(s => s.Name).ToList() : new List<MyMvcApp.Models.Section>();
+                                }
+
+                                @if (secs.Count > 0)
+                                {
+                                    foreach (var s in secs)
+                                    {
+                                        var cnt = sectionCounts.ContainsKey(s.Id) ? sectionCounts[s.Id] : 0;
+                                        <a class="btn btn-sm btn-light me-1 mb-1"
+                                           style="font-size:0.85rem"
+                                           asp-controller="Students"
+                                           asp-action="ByClass"
+                                           asp-route-id="@c.Id"
+                                           asp-route-sectionId="@s.Id">
+                                            @s.Name (@cnt)
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No sections</span>
+                                }
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="students-main">
+        <div class="students-table-container">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Roll</th>
+                            <th>Name</th>
+                            <th>Section</th>
+                            <th>Email</th>
+                            <th style="min-width:200px">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var s in Model)
+                            {
+                                <tr>
+                                    <td class="text-nowrap">@s.Roll</td>
+                                    <td>@s.Name</td>
+                                    <td>@s.Section?.Name</td>
+                                    <td class="text-truncate" style="max-width:180px">@s.Email</td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <a asp-action="Details" asp-route-id="@s.Id" class="btn btn-sm btn-info">Profile</a>
+                                            <a asp-action="Edit" asp-route-id="@s.Id" class="btn btn-sm btn-warning">Edit</a>
+
+                                            <form asp-action="ToggleStatus" asp-route-id="@s.Id" method="post" style="display:inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                                                @if (s.IsActive)
+                                                {
+                                                    <button type="submit" class="btn btn-sm btn-secondary">Deactivate</button>
+                                                }
+                                                else
+                                                {
+                                                    <button type="submit" class="btn btn-sm btn-success">Activate</button>
+                                                }
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">No students found for this class/filters.</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-3">
+            @* pagination placeholder if needed later: use ViewBag.Pagination *@
+        </div>
+    </main>
+</div>

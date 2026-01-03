@@ -1,0 +1,8 @@
+﻿@model MyMvcApp.Models.Student
+<h2>Delete Student</h2>
+<p>Are you sure to delete <strong>@Model.Name</strong>?</p>
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger">Yes, delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

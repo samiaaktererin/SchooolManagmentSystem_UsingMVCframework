@@ -1,0 +1,115 @@
+﻿@model MyMvcApp.Models.Student
+@{
+    ViewData["Title"] = "Add Student";
+    var classes = ViewBag.Classes as List<MyMvcApp.Models.Classroom>;
+}
+
+<h2>Add Student</h2>
+<div asp-validation-summary="All" class="text-danger"></div>
+
+
+<form asp-action="Create" method="post" enctype="multipart/form-data" novalidate>
+    @Html.AntiForgeryToken()
+
+    <!-- ================= STUDENT INFO ================= -->
+
+    <div class="mb-3">
+        <label>Name</label>
+        <input asp-for="Name" class="form-control"
+               data-val="true"
+               data-val-required="Name is required"
+               data-val-regex="Only letters allowed"
+               data-val-regex-pattern="^[a-zA-Z\s]+$" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input asp-for="Email" class="form-control"
+               data-val="true"
+               data-val-email="Invalid email format" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Roll</label>
+        <input asp-for="Roll" class="form-control"
+               data-val="true"
+               data-val-regex="Only numbers allowed"
+               data-val-regex-pattern="^[0-9]+$" />
+        <span asp-validation-for="Roll" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Class</label>
+        <select id="classSelect" name="classId" class="form-control">
+            <option value="">--Select Class--</option>
+            @foreach (var c in classes!)
+            {
+                <option value="@c.Id">@c.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Section</label>
+        <select id="sectionSelect" name="sectionId" class="form-control">
+            <option value="">--Select Section--</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Photo</label>
+        <input type="file" name="photo" class="form-control" accept="image/*" />
+    </div>
+
+    <!-- ================= PARENT INFO ================= -->
+    <h4>Parent Info</h4>
+
+    <div class="mb-3">
+        <label>Guardian Name</label>
+        <input name="parent.FatherName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Phone</label>
+        <input name="parent.FatherPhone" class="form-control" />
+    </div>
+
+
+
+    <button class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        // ✅ show validation ONLY when leaving field
+        $(function () {
+            $("input").on("blur", function () {
+                $(this).valid();
+            });
+        });
+
+        document.getElementById('classSelect').addEventListener('change', function () {
+            const classId = this.value;
+            const sectionSelect = document.getElementById('sectionSelect');
+            sectionSelect.innerHTML = '<option value="">--Select Section--</option>';
+
+            if (!classId) return;
+
+            fetch('/Students/GetSections?classId=' + classId)
+                .then(r => r.json())
+                .then(data => {
+                    data.forEach(s => {
+                        const opt = document.createElement("option");
+                        opt.value = s.id;
+                        opt.text = s.name;
+                        sectionSelect.appendChild(opt);
+                    });
+                });
+        });
+    </script>
+}

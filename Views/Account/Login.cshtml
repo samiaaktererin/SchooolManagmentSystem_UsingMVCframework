@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    var role = ViewBag.Role as string;
+}
+
+<h2 class="text-center">Login</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger text-center">
+        @ViewBag.Error
+    </div>
+}
+
+<form asp-action="Login" method="post" class="mt-4">
+
+    @Html.AntiForgeryToken()
+
+    <!-- 🔴 VERY IMPORTANT -->
+    <input type="hidden" name="role" value="@role" />
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input name="email" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" required />
+    </div>
+
+    <button class="btn btn-primary w-100">Login</button>
+</form>
