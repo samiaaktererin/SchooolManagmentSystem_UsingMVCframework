@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Assign Teacher";
+    var teachers = ViewBag.Teachers as List<MyMvcApp.Models.Teacher>;
+    var subjects = ViewBag.Subjects as List<MyMvcApp.Models.Subject>;
+    var classes = ViewBag.Classes as List<MyMvcApp.Models.Classroom>;
+}
+
+<h2 class="mb-3">Assign Teacher → Subject → Class → Section</h2>
+
+<form asp-action="Assign" method="post">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label>Teacher</label>
+        <select name="teacherId" class="form-select" required>
+            <option value="">-- Select Teacher --</option>
+            @foreach (var t in teachers)
+            {
+                <option value="@t.Id">@t.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Subject</label>
+        <select name="subjectId" class="form-select" required>
+            <option value="">-- Select Subject --</option>
+            @foreach (var s in subjects)
+            {
+                <option value="@s.Id">@s.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Class</label>
+        <select id="classSelect" name="classId" class="form-select" required>
+            <option value="">-- Select Class --</option>
+            @foreach (var c in classes)
+            {
+                <option value="@c.Id">@c.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Section</label>
+        <select id="sectionSelect" name="sectionId" class="form-select" required>
+            <option value="">-- Select Section --</option>
+        </select>
+    </div>
+
+    <button class="btn btn-success">Save Assignment</button>
+</form>
+
+@section Scripts {
+    <script>
+        document.getElementById("classSelect").addEventListener("change", function () {
+            const classId = this.value;
+            const sectionSelect = document.getElementById("sectionSelect");
+
+            sectionSelect.innerHTML = '<option value="">-- Select Section --</option>';
+            if (!classId) return;
+
+            fetch('/Academic/GetSections?classId=' + classId)
+                .then(r => r.json())
+                .then(data => {
+                    data.forEach(s => {
+                        const opt = document.createElement("option");
+                        opt.value = s.id;
+                        opt.text = s.name;
+                        sectionSelect.appendChild(opt);
+                    });
+                });
+        });
+    </script>
+}

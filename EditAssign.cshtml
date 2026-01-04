@@ -1,0 +1,94 @@
+﻿@model MyMvcApp.Models.TeacherSubject
+
+@{
+    ViewData["Title"] = "Edit Assignment";
+
+    var teachers = ViewBag.Teachers as List<MyMvcApp.Models.Teacher>;
+    var subjects = ViewBag.Subjects as List<MyMvcApp.Models.Subject>;
+    var classes = ViewBag.Classes as List<MyMvcApp.Models.Classroom>;
+    var sections = ViewBag.Sections as List<MyMvcApp.Models.Section>;
+}
+
+<h2 class="mb-3">Edit Assignment</h2>
+
+<form asp-action="EditAssign" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <div class="mb-3">
+        <label>Teacher</label>
+        <select name="teacherId" class="form-select">
+            @foreach (var t in teachers)
+            {
+                <option value="@t.Id" selected="@(t.Id == Model.TeacherId)">
+                    @t.Name
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Subject</label>
+        <select name="subjectId" class="form-select">
+            @foreach (var s in subjects)
+            {
+                <option value="@s.Id" selected="@(s.Id == Model.SubjectId)">
+                    @s.Name
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Class</label>
+        <select id="classSelect" name="classId" class="form-select">
+            @foreach (var c in classes)
+            {
+                <option value="@c.Id" selected="@(c.Id == Model.ClassroomId)">
+                    @c.Name
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Section</label>
+        <select id="sectionSelect" name="sectionId" class="form-select">
+            @if (sections != null)
+            {
+                foreach (var sec in sections)
+                {
+                    <option value="@sec.Id" selected="@(sec.Id == Model.SectionId)">
+                        @sec.Name
+                    </option>
+                }
+            }
+        </select>
+    </div>
+
+    <button class="btn btn-primary">Update</button>
+    <a asp-action="AssignedList" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <script>
+        document.getElementById("classSelect").addEventListener("change", function () {
+            const classId = this.value;
+            const sectionSelect = document.getElementById("sectionSelect");
+
+            sectionSelect.innerHTML = '<option value="">-- Select Section --</option>';
+            if (!classId) return;
+
+            fetch('/Academic/GetSections?classId=' + classId)
+                .then(r => r.json())
+                .then(data => {
+                    data.forEach(s => {
+                        const opt = document.createElement("option");
+                        opt.value = s.id;
+                        opt.text = s.name;
+                        sectionSelect.appendChild(opt);
+                    });
+                });
+        });
+    </script>
+}
