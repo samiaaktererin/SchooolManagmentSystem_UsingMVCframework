@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "Academic Management";
+}
+
+<h2 class="mb-4">Academic Management</h2>
+
+<div class="row g-4">
+
+    <!-- SUBJECT MANAGEMENT -->
+    <div class="col-md-4">
+        <div class="card border-primary shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title mb-3">📘 Subject Management</h5>
+
+                <a asp-controller="Academic"
+                   asp-action="Subjects"
+                   class="btn btn-outline-primary w-100 mb-2">
+                    View Subjects
+                </a>
+
+                <a asp-controller="Academic"
+                   asp-action="CreateSubject"
+                   class="btn btn-primary w-100">
+                    + Add Subject
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ASSIGN TEACHER -->
+    <div class="col-md-4">
+        <div class="card border-success shadow-sm h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title mb-3">
+                    👩‍🏫 Assign Teacher → Subject → Class
+                </h5>
+
+                <a asp-controller="Academic"
+                   asp-action="Assign"
+                   class="btn btn-success w-100 mb-2">
+                    Assign Now
+                </a>
+
+                <a asp-controller="Academic"
+                   asp-action="AssignedList"
+                   class="btn btn-outline-success w-100">
+                    View Assigned List
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>

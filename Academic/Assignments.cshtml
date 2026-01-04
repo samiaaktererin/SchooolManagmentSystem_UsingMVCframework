@@ -1,0 +1,40 @@
+﻿@model IEnumerable<MyMvcApp.Models.TeacherSubject>
+
+@{
+    ViewData["Title"] = "Assigned Teachers";
+}
+
+<h3 class="mb-3">✅ Assigned Teacher List</h3>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Teacher</th>
+            <th>Subject</th>
+            <th>Class</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="3" class="text-center text-muted">
+                    No assignment found
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var a in Model)
+            {
+                <tr>
+                    <td>@a.Teacher?.Name</td>
+                    <td>@a.Subject?.Name</td>
+                    <td>@a.Classroom?.Name</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">Back</a>
