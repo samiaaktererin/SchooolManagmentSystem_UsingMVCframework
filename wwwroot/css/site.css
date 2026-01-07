@@ -1,0 +1,157 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+/* Responsive tweaks for Students pages */
+.student-thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+}
+
+/* Make table cells wrap nicely on small screens */
+.table td, .table th {
+    vertical-align: middle;
+}
+
+/* Ensure small controls don't overflow */
+.form-control {
+    min-width: 0;
+}
+
+/* On very small screens reduce spacing */
+@media (max-width: 576px) {
+    .student-thumb {
+        width: 48px;
+        height: 48px;
+    }
+
+    .table thead {
+        font-size: 0.95rem;
+    }
+
+    .list-group-item .d-flex > .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.78rem;
+    }
+}
+/* === students independent scroll layout === */
+.students-wrapper {
+    display: flex;
+    gap: 1rem;
+    align-items: stretch;
+}
+
+/* Sidebar: fixed width, independent scroll */
+.students-sidebar {
+    flex: 0 0 280px; /* width of sidebar on desktop */
+    max-width: 280px;
+    border: 0;
+    padding: 0;
+    /* adjust height relative to viewport minus header/footer (180px as example) */
+    max-height: calc(100vh - 180px);
+    overflow: auto;
+}
+
+/* Main area: takes remaining space, independent scroll */
+.students-main {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-width: 0; /* allow children to shrink */
+    max-height: calc(100vh - 180px);
+    overflow: auto; /* scroll inside main */
+}
+
+/* Table container inside main - allow its own scroll if needed */
+.students-table-container {
+    overflow: auto;
+    /* ensure it doesn't grow beyond parent */
+    max-height: 100%;
+}
+
+/* tweak thumbnail */
+.student-thumb {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    display: block;
+}
+
+/* small screen adjustments: stack and let collapse work */
+@media (max-width: 767.98px) {
+    .students-wrapper {
+        flex-direction: column;
+    }
+
+    .students-sidebar {
+        max-height: none;
+    }
+
+    .students-main {
+        max-height: none;
+        overflow: visible;
+    }
+}
+
+/* you can tune the 180px value above based on your header/footer height */
+/* --- Overlay sidebar on small screens to avoid layout shift --- */
+.students-wrapper {
+    position: relative; /* needed for overlay positioning */
+}
+
+/* Mobile: make sidebar overlay and full-width */
+@media (max-width: 767.98px) {
+    .students-sidebar {
+        position: absolute !important;
+        z-index: 1055;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 100%;
+        max-width: 100%;
+        background: white;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        padding: 1rem;
+        overflow: auto;
+        transform: translateY(0); /* ensure no weird translate */
+    }
+
+    /* dim the background when sidebar open (we will toggle .sidebar-open on body) */
+    body.sidebar-open::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.35);
+        z-index: 1050; /* below sidebar (1055) but above content */
+    }
+
+    /* prevent main area from scrolling while sidebar open */
+    body.sidebar-open .students-main {
+        overflow: hidden;
+        touch-action: none;
+    }
+}
+
