@@ -1,0 +1,114 @@
+﻿@model IEnumerable<MyMvcApp.Models.TeacherAttendance>
+
+@{
+    ViewData["Title"] = "Attendance";
+    var teacher = ViewBag.Teacher as MyMvcApp.Models.Teacher;
+    bool isTeacher = User.IsInRole("Teacher");
+    bool isAdmin = User.IsInRole("Admin");
+}
+
+<h2>Attendance — @teacher?.Name</h2>
+
+<div class="mb-3">
+    <a asp-action="Details" asp-route-id="@teacher?.Id" class="btn btn-secondary">
+        ← Back to Profile
+    </a>
+</div>
+
+<!-- ================= ADMIN ONLY: ATTENDANCE FORM ================= -->
+@if (isAdmin)
+{
+    <div class="card mb-4">
+        <div class="card-header">Take / Edit Attendance</div>
+        <div class="card-body">
+            <form asp-action="RecordAttendance" method="post" class="row g-3">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="teacherId" value="@teacher?.Id" />
+
+                <div class="col-md-4">
+                    <label>Date</label>
+                    <input type="date" name="date" class="form-control" required />
+                </div>
+
+                <div class="col-md-4">
+                    <label>Status</label>
+                    <select name="present" class="form-control">
+                        <option value="true">Present</option>
+                        <option value="false">Absent</option>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label>Note</label>
+                    <input type="text" name="note" class="form-control" />
+                </div>
+
+                <div class="col-12">
+                    <button class="btn btn-primary">Save Attendance</button>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+<!-- ================= ATTENDANCE HISTORY (ADMIN + TEACHER) ================= -->
+<h4>Attendance History</h4>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Note</th>
+
+            @if (isAdmin)
+            {
+                <th>Action</th>
+            }
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="@(isAdmin ? 4 : 3)" class="text-center">
+                    No attendance records
+                </td>
+            </tr>
+        }
+        else
+        {
+            foreach (var a in Model)
+            {
+                <tr>
+                    <td>@a.Date.ToString("dd MMM yyyy")</td>
+                    <td>
+                        @if (a.Present)
+                        {
+                            <span class="badge bg-success">Present</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Absent</span>
+                        }
+                    </td>
+                    <td>@(a.Note ?? "-")</td>
+
+                    @if (isAdmin)
+                    {
+                        <td>
+                            <a asp-action="EditAttendance"
+                               asp-route-teacherId="@a.TeacherId"
+                               asp-route-date="@a.Date.ToString("yyyy-MM-dd")"
+                               class="btn btn-sm btn-warning">
+                                Edit
+                            </a>
+                        </td>
+                    }
+                </tr>
+            }
+        }
+    </tbody>
+</table>

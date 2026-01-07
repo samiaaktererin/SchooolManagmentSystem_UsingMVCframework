@@ -1,0 +1,60 @@
+﻿@model MyMvcApp.Models.Teacher
+
+@{
+    ViewData["Title"] = "Edit Teacher";
+    var classes = ViewBag.Classes as List<MyMvcApp.Models.Classroom>;
+}
+
+<h2 class="mb-3">Edit Teacher</h2>
+
+<!-- 🔴 Validation summary -->
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Phone" class="form-label"></label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+
+    
+
+    <div class="mb-3">
+        <label class="form-label">Change Photo</label>
+        <input type="file" name="photo" class="form-control" accept="image/*" />
+
+        @if (!string.IsNullOrEmpty(Model.PhotoPath))
+        {
+            <div class="mt-2">
+                <img src="@Model.PhotoPath" width="80" class="rounded border" />
+            </div>
+        }
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,98 @@
+﻿@model List<MyMvcApp.Models.ViewModels.TeacherDashboardRowVM>
+
+@{
+    ViewData["Title"] = "Teacher Dashboard";
+}
+
+<h2 class="mb-4">📊 Teacher Overview Dashboard</h2>
+<div class="mb-3">
+    <a asp-controller="Teachers"
+       asp-action="Index"
+       class="btn btn-secondary">
+        ← Back
+    </a>
+</div>
+
+
+<!-- ================= SUMMARY CARDS ================= -->
+<div class="row g-4 mb-5">
+
+    <div class="col-md-3">
+        <div class="card text-center p-3 shadow-sm">
+            <h5>Total Teachers</h5>
+            <h2>@ViewBag.TotalTeachers</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center p-3 shadow-sm text-success">
+            <h5>Active</h5>
+            <h2>@ViewBag.ActiveTeachers</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center p-3 shadow-sm text-danger">
+            <h5>Inactive</h5>
+            <h2>@ViewBag.InactiveTeachers</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center p-3 shadow-sm text-primary">
+            <h5>Present Today</h5>
+            <h2>@ViewBag.PresentToday</h2>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-center p-3 shadow-sm text-warning">
+            <h5>Absent Today</h5>
+            <h2>@ViewBag.AbsentToday</h2>
+        </div>
+    </div>
+
+</div>
+
+<!-- ================= TEACHER LIST ================= -->
+<h2 class="mb-4">📋 Teacher Attendance List (Today)</h2>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Teacher</th>
+            <th>Status</th>
+            <th>Attendance</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model)
+        {
+            <tr>
+                <td>@t.TeacherName</td>
+
+                <td>
+                    @if (t.IsActive)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Inactive</span>
+                    }
+                </td>
+
+                <td>
+                    @if (t.IsPresentToday)
+                    {
+                        <span class="badge bg-success">Present</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Absent</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

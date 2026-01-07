@@ -1,0 +1,99 @@
+﻿@model IEnumerable<MyMvcApp.Models.Teacher>
+
+@{
+    ViewData["Title"] = "Teachers";
+}
+
+<h2 class="mb-3">Teachers</h2>
+
+<div class="d-flex justify-content-between mb-3">
+    <form method="get" class="d-flex gap-2">
+        <input type="text"
+               name="search"
+               value="@Context.Request.Query["search"]"
+               class="form-control"
+               placeholder="Search by name / email / phone" />
+        <button class="btn btn-primary">Search</button>
+    </form>
+
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-dark" asp-action="Dashboard">
+            Dashboard
+        </a>
+
+        <a asp-action="Create" class="btn btn-success">
+            + Add Teacher
+        </a>
+       
+       
+
+    </div>
+</div>
+
+<table class="table table-bordered table-striped align-middle">
+    <thead>
+        <tr>
+            <th>Teacher</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Status</th>
+            <th style="width:260px">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var t in Model)
+        {
+            <tr>
+                <!-- NAME + PHOTO -->
+                <td>
+                    <div class="d-flex align-items-center gap-2">
+                        @if (!string.IsNullOrEmpty(t.PhotoPath))
+                        {
+                            <img src="@t.PhotoPath"
+                                 width="40"
+                                 height="40"
+                                 class="rounded-circle border"
+                                 style="object-fit:cover" />
+                        }
+                        else
+                        {
+                            <img src="https://via.placeholder.com/40"
+                                 class="rounded-circle border" />
+                        }
+
+                        <strong>@t.Name</strong>
+                    </div>
+                </td>
+
+                <td>@t.Email</td>
+                <td>@t.Phone</td>
+
+                <td>
+                    @if (t.IsActive)
+                    {
+                        <span class="badge bg-success">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Inactive</span>
+                    }
+                </td>
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@t.Id" class="btn btn-sm btn-info">
+                        Profile
+                    </a>
+                    <a asp-action="AttendanceList" asp-route-id="@t.Id" class="btn btn-sm btn-warning">
+                        Attendance
+                    </a>
+                    <a asp-action="Salary" asp-route-id="@t.Id" class="btn btn-sm btn-success">
+                        Salary
+                    </a>
+                    <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-sm btn-primary">
+                        Edit
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

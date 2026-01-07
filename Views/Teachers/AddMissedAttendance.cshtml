@@ -1,0 +1,45 @@
+﻿@model MyMvcApp.Models.TeacherAttendance
+
+@{
+    var teacher = ViewBag.Teacher;
+    ViewData["Title"] = "Add Missed Attendance";
+}
+
+<h4 class="mb-3">
+    ➕ Add Missed Attendance – <strong>@teacher.Name</strong>
+</h4>
+
+<form asp-action="AddMissedAttendance" method="post">
+    @Html.AntiForgeryToken()
+
+    <!-- FIXED TEACHER -->
+    <input type="hidden" asp-for="TeacherId" />
+
+    <div class="mb-3">
+        <label>Date</label>
+        <input asp-for="Date" type="date" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Status</label>
+        <select asp-for="Present" class="form-control">
+            <option value="true">Present</option>
+            <option value="false">Absent</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Note</label>
+        <textarea asp-for="Note" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-success">
+        ✅ Save Attendance
+    </button>
+
+    <a asp-action="AttendanceList"
+       asp-route-id="@teacher.Id"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+</form>

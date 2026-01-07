@@ -1,0 +1,57 @@
+﻿@model MyMvcApp.Models.Teacher
+@{
+    ViewData["Title"] = "Add Teacher";
+    var classes = ViewBag.Classes as List<MyMvcApp.Models.Classroom>;
+}
+
+<h2>Add Teacher</h2>
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<form asp-action="Create" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label>Name</label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label>Email</label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label>Password</label>
+        <input type="password"
+               name="password"
+               class="form-control"
+               required
+               minlength="6" />
+        <small class="text-muted">
+            Minimum 6 characters
+        </small>
+    </div>
+
+
+    <div class="mb-3">
+        <label>Phone</label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+
+   
+
+    <div class="mb-3">
+        <label>Photo</label>
+        <input type="file" name="photo" class="form-control" accept="image/*" />
+    </div>
+
+    <button class="btn btn-success">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

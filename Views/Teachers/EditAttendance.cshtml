@@ -1,0 +1,35 @@
+﻿@model MyMvcApp.Models.TeacherAttendance
+
+<h4 class="mb-3">
+    📌 Attendance for <strong>@ViewBag.Teacher.Name</strong>
+</h4>
+
+<form asp-action="EditAttendance" method="post">
+    @Html.AntiForgeryToken()
+
+    <!-- 🔒 FIXED TEACHER -->
+    <input type="hidden" asp-for="TeacherId" />
+    <input type="hidden" asp-for="Date" />
+
+    <div class="mb-3">
+        <label>Date</label>
+        <input class="form-control" value="@Model.Date.ToString("dd MMM yyyy")" disabled />
+    </div>
+
+    <div class="mb-3">
+        <label>Status</label>
+        <select asp-for="Present" class="form-control">
+            <option value="true">Present</option>
+            <option value="false">Absent</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Note</label>
+        <textarea asp-for="Note" class="form-control"></textarea>
+    </div>
+
+    <button class="btn btn-success w-100">
+        💾 Save Attendance
+    </button>
+</form>

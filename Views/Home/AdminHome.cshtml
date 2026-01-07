@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2 class="mb-4">Welcome, Admin</h2>
+
+<div class="row g-4">
+    <div class="col-md-3">
+        <a asp-controller="Students" asp-action="Index" class="card text-center p-3 shadow-sm text-decoration-none">
+            👨‍🎓 Students
+        </a>
+    </div>
+
+    <div class="col-md-3">
+        <a asp-controller="Teachers" asp-action="Index" class="card text-center p-3 shadow-sm text-decoration-none">
+            👩‍🏫 Teachers
+        </a>
+    </div>
+
+    <div class="col-md-3">
+        <a asp-controller="Academic" asp-action="Index" class="card text-center p-3 shadow-sm text-decoration-none">
+            📚 Academic
+        </a>
+    </div>
+</div>

@@ -1,0 +1,169 @@
+﻿@using Microsoft.AspNetCore.Identity
+@{
+    ViewData["Title"] = "Home";
+}
+
+<style>
+    .hero {
+        background: linear-gradient(135deg, #0d6efd, #6610f2);
+        color: white;
+        padding: 90px 25px;
+        border-radius: 14px;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            opacity: .95;
+        }
+
+    .card-ui {
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(0,0,0,.08);
+        transition: .25s;
+    }
+
+        .card-ui:hover {
+            transform: translateY(-6px);
+        }
+
+    .school-img {
+        border-radius: 14px;
+        box-shadow: 0 12px 30px rgba(0,0,0,.18);
+    }
+</style>
+
+@* ========================================================= *@
+@* =============== NOT LOGGED IN (LANDING) ================= *@
+@* ========================================================= *@
+@if (!User.Identity!.IsAuthenticated)
+{
+    <div class="hero">
+        <h1>CodeCatalyst Secondary School</h1>
+        <p>Smart School Management & Automation System</p>
+
+        <div class="mt-4">
+            <a asp-controller="Account" asp-action="Login" asp-route-role="Admin"
+               class="btn btn-light">
+                Admin Login
+            </a>
+
+            <a asp-controller="Account" asp-action="Login" asp-route-role="Teacher"
+               class="btn btn-primary">
+                Teacher Login
+            </a>
+
+        </div>
+    </div>
+
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6 mb-3">
+            <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b"
+                 class="img-fluid school-img"
+                 alt="School">
+        </div>
+
+        <div class="col-md-6">
+            <h3 class="fw-bold mb-3">About Our School</h3>
+            <p>
+                CodeCatalyst Secondary School is a modern educational institution
+                focused on academic excellence, discipline and digital innovation.
+            </p>
+            <ul>
+                <li>✔ Role-based secure system</li>
+                <li>✔ Digital attendance & academics</li>
+                <li>✔ Admin & Teacher dashboards</li>
+            </ul>
+        </div>
+    </div>
+}
+
+@* ========================================================= *@
+@* =================== ADMIN HOME ========================== *@
+@* ========================================================= *@
+else if (User.IsInRole("Admin"))
+{
+    <div class="hero">
+        <h1>Welcome, Admin</h1>
+        <p>School Administration Dashboard</p>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card card-ui p-4 text-center">
+                <h4>🎓 Students</h4>
+                <p>Manage student profiles & enrollment</p>
+                <a asp-controller="Students" asp-action="Index"
+                   class="btn btn-primary">
+                    Open
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-ui p-4 text-center">
+                <h4>👩‍🏫 Teachers</h4>
+                <p>Teacher profiles, attendance & salary</p>
+                <a asp-controller="Teachers" asp-action="Index"
+                   class="btn btn-success">
+                    Open
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-ui p-4 text-center">
+                <h4>📚 Academic</h4>
+                <p>Subjects, classes & assignments</p>
+                <a asp-controller="Academic" asp-action="Index"
+                   class="btn btn-dark">
+                    Open
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+@* ========================================================= *@
+@* ================== TEACHER HOME ========================= *@
+@* ========================================================= *@
+else if (User.IsInRole("Teacher"))
+{
+    <div class="hero">
+        <h1>Welcome, Teacher</h1>
+        <p>Your Teaching Dashboard</p>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-6">
+            <div class="card card-ui p-4 text-center">
+                <h4>👤 My Profile</h4>
+                <p>View your profile & assigned subjects</p>
+                <a asp-controller="Teachers" asp-action="MyProfile"
+                   class="btn btn-primary">
+                    View Profile
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card card-ui p-4 text-center">
+                <h4>📝 Attendance</h4>
+                <p>Submit & view attendance records</p>
+                <a asp-controller="Teachers" asp-action="Attendance"
+                   class="btn btn-warning">
+                    Attendance
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+
+

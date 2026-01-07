@@ -1,0 +1,55 @@
+﻿@model List<MyMvcApp.Models.TeacherAttendance>
+
+<h2 class="mb-4">📅 Teacher Attendance (Admin View)</h2>
+
+<a asp-action="AddMissedAttendance"
+   asp-route-teacherId="@ViewBag.Teacher.Id"
+   class="btn btn-sm btn-outline-primary mb-3">
+    ➕ Add Missed Attendance
+</a>
+
+
+
+<table class="table table-bordered table-striped align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>Teacher</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Note</th>
+            <th style="width:120px">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+            <tr>
+                <td>@a.Teacher?.Name</td>
+
+                <td>@a.Date.ToString("dd MMM yyyy")</td>
+
+                <td>
+                    @if (a.Present)
+                    {
+                        <span class="badge bg-success">Present</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Absent</span>
+                    }
+                </td>
+
+                <td>@(string.IsNullOrWhiteSpace(a.Note) ? "-" : a.Note)</td>
+
+                <td class="text-center">
+                    <a asp-action="EditAttendance"
+                       asp-route-teacherId="@a.TeacherId"
+                       asp-route-date="@a.Date.ToString("yyyy-MM-dd")"
+                       class="btn btn-sm btn-primary">
+                        ✏ Edit
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<style>
+    .dashboard-hero {
+        background: linear-gradient(135deg, #198754, #0d6efd);
+        color: white;
+        padding: 60px 20px;
+        border-radius: 12px;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .dash-card {
+        border-radius: 14px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        transition: transform .2s ease;
+    }
+
+        .dash-card:hover {
+            transform: translateY(-6px);
+        }
+</style>
+
+<!-- ================= HERO ================= -->
+<div class="dashboard-hero">
+    <h1>Welcome, Admin</h1>
+    <p>CodeCatalyst Secondary School – Administration Panel</p>
+</div>
+
+<!-- ================= DASHBOARD CARDS ================= -->
+<div class="row g-4">
+
+    <div class="col-md-4">
+        <div class="card dash-card p-4 text-center h-100">
+            <h4>🎓 Students</h4>
+            <p>Manage student profiles, class & section</p>
+            <a asp-controller="Students" asp-action="Index"
+               class="btn btn-outline-primary mt-2">
+                Manage Students
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card dash-card p-4 text-center h-100">
+            <h4>👩‍🏫 Teachers</h4>
+            <p>Teacher profiles, attendance & salary</p>
+            <a asp-controller="Teachers" asp-action="Index"
+               class="btn btn-outline-success mt-2">
+                Manage Teachers
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card dash-card p-4 text-center h-100">
+            <h4>📚 Academic</h4>
+            <p>Subjects, class & section assignments</p>
+            <a asp-controller="Academic" asp-action="Index"
+               class="btn btn-outline-dark mt-2">
+                Academic Panel
+            </a>
+        </div>
+    </div>
+
+</div>
+
+
